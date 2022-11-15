@@ -12,6 +12,28 @@ class Dfs(Puzzle):
     Dfs
     """
 
+    def __init__(self):
+
+        """
+        Initializes class through user input
+
+        Performs basic input validation
+        """
+
+        super().__init__()
+        self.index = 0
+        self.parent_indices = [0]
+
+    def update(self):
+
+        """
+        Updates state variables for solver
+        """
+
+        self.index += 1
+        self.parent_indices.append(self.index)
+        self.state = self.states[self.index]
+
     def solver(self):
 
         """
@@ -22,27 +44,38 @@ class Dfs(Puzzle):
             self.print_state(-1)
             return
 
-        index = 0
-
         while True:
 
-            self.state = self.states[index]
+            if self.shift([-1, 0]):
+                if self.check_state(-1):
+                    print(f"Count: {self.count}")
+                    break
+                self.update()
+                continue
 
-            if self.shift([-1, 0]) and self.check_state(-1):
-                print(f"Count: {self.count}")
-                break
-            if self.shift([0, -1]) and self.check_state(-1):
-                print(f"Count: {self.count}")
-                break
-            if self.shift([1, 0]) and self.check_state(-1):
-                print(f"Count: {self.count}")
-                break
-            if self.shift([0, 1]) and self.check_state(-1):
-                print(f"Count: {self.count}")
-                break
+            if self.shift([0, -1]):
+                if self.check_state(-1):
+                    print(f"Count: {self.count}")
+                    break
+                self.update()
+                continue
 
-            index += 1
-            print("Depth: ", index)
+            if self.shift([1, 0]):
+                if self.check_state(-1):
+                    print(f"Count: {self.count}")
+                    break
+                self.update()
+                continue
+
+            if self.shift([0, 1]):
+                if self.check_state(-1):
+                    print(f"Count: {self.count}")
+                    break
+                self.update()
+                continue
+
+            self.state = self.states[self.parent_indices.pop()]
+            print("Depth: ", self.index)
 
         return
 

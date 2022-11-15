@@ -25,7 +25,12 @@ class Puzzle:
 
     def __init__(self):
 
-        # Prompt user to to input matrix
+        """
+        Initializes class through user input
+
+        Performs basic input validation
+        """
+
         length = int(input("Enter number of rows: "))
         num = length * length - 1
 
@@ -46,7 +51,7 @@ class Puzzle:
         for i in range(1, num + 1, 1):
             assert str(i) in flattened, f"Missing digit: {i}"
 
-        assert "x" in flattened, f'Missing blank slot: "x"'
+        assert "x" in flattened, 'Missing blank slot: "x"'
 
         self.state = rows
         self.states = [self.state]
@@ -57,6 +62,11 @@ class Puzzle:
         self.count = 0
 
     def print_state(self, index):
+
+        """
+        Prints state at self.states[index]
+        """
+
         for row in self.states[index]:
             print_row = ""
             for num in row:
@@ -64,34 +74,87 @@ class Puzzle:
             print(print_row)
         print()
 
-    def find_x(self):
+    @staticmethod
+    def __find_x(digit, state):
+
+        """
+        Finds and returns position of digit in provided state
+        """
+
         for i in range(3):
             for j in range(3):
-                if self.state[i][j] == "x":
+                if state[i][j] == digit:
                     return [i, j]
         return [i, j]
 
     @staticmethod
     def __check_shift(x_coordinates, change):
+
+        """
+        Checks if shift is legal
+        """
+
         x_pos = x_coordinates[0] + change[0]
         y_pos = x_coordinates[1] + change[1]
-        if x_pos >= 0 and x_pos <= 2 and y_pos >= 0 and y_pos <= 2:
+
+        x_flag = x_pos >= 0 and x_pos <= 2
+        y_flag = y_pos >= 0 and y_pos <= 2
+
+        if x_flag and y_flag:
             return True
+
         return False
 
     def shift(self, change):
-        x = self.find_x()
+
+        """
+        Perform shift of blank slot with provided change
+
+        Returns True after appending new state to self.states
+        if shift is possible and state is new, else returns False
+        """
+
+        x_pos = self.__find_x("x", self.state)
         temp_state = deepcopy(self.state)
-        if self.__check_shift(x, change):
-            temp_state[x[0] + change[0]][x[1] + change[1]], temp_state[x[0]][x[1]] = temp_state[x[0]][x[1]], temp_state[x[0] + change[0]][x[1] + change[1]]
-            self.states.append(temp_state)
-            self.print_state(-1)
+
+        if self.__check_shift(x_pos, change):
+            temp = temp_state[x_pos[0]][x_pos[1]]
+            temp_state[x_pos[0]][x_pos[1]] = temp_state[x_pos[0] + change[0]][x_pos[1] + change[1]]
+            temp_state[x_pos[0] + change[0]][x_pos[1] + change[1]] = temp
+
+            if temp_state not in self.states:
+                self.states.append(temp_state)
+                self.print_state(-1)
+            else:
+                return False
+
             return True
+
         return False
 
     def check_state(self, index):
+
+        """
+        Check if provided state is goal state
+        """
+
         self.count += 1
         return self.states[index] == self.goal_state
+
+    def manhattan_distance(self):
+
+        """
+        Calculate manhattan distance between
+        current and goal state
+        """
+
+        dist = 0
+        for row, i in enumerate(self.state):
+            for digit, j in enumerate(row):
+                goal_position = self.__find_x(digit, self.goal_state)
+                dist += abs(i - goal_position[0]) + abs(j - goal_position[1])
+
+        return dist
 
 
 if __name__ == "__main__":
