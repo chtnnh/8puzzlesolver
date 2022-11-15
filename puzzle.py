@@ -55,6 +55,7 @@ class Puzzle:
 
         self.state = rows
         self.states = [self.state]
+        self.states_check = {self.__flatten(self.state): True}
 
         self.goal_state = [str(x) for x in range(1, num + 1, 1)]
         self.goal_state = [self.goal_state[i:i+length] for i in range(0, num + 1, length)]
@@ -105,6 +106,18 @@ class Puzzle:
 
         return False
 
+    @staticmethod
+    def __flatten(state):
+
+        """
+        Returns identifier string for state_check
+        """
+
+        state_identifier = ""
+        for row in state:
+            state_identifier += "".join(row)
+        return state_identifier
+
     def shift(self, change):
 
         """
@@ -122,8 +135,11 @@ class Puzzle:
             temp_state[x_pos[0]][x_pos[1]] = temp_state[x_pos[0] + change[0]][x_pos[1] + change[1]]
             temp_state[x_pos[0] + change[0]][x_pos[1] + change[1]] = temp
 
-            if temp_state not in self.states:
+            temp_state_check = self.__flatten(temp_state)
+
+            if temp_state_check not in self.states_check:
                 self.states.append(temp_state)
+                self.states_check[temp_state_check] = True
                 self.print_state(-1)
             else:
                 return False
