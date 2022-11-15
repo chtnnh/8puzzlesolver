@@ -157,7 +157,7 @@ class Puzzle:
         self.count += 1
         return self.states[index] == self.goal_state
 
-    def manhattan_distance(self):
+    def manhattan_distance(self, index):
 
         """
         Calculate manhattan distance between
@@ -165,8 +165,8 @@ class Puzzle:
         """
 
         dist = 0
-        for row, i in enumerate(self.state):
-            for digit, j in enumerate(row):
+        for i, row in enumerate(self.states[index]):
+            for j, digit in enumerate(row):
                 goal_position = self.__find_x(digit, self.goal_state)
                 dist += abs(i - goal_position[0]) + abs(j - goal_position[1])
 
