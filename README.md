@@ -6,13 +6,13 @@ Contains python implementation of the following algorithms to solve the 8 puzzle
 1. Breadth First Search
 2. Depth First Search
 3. A*
+4. Genetic Algorithms
 
 ## TODO
 
-1. Genetic Algorithms
-2. Web UI
-3. Visualisations
-4. Documentation
+1. Web UI
+2. Visualisations
+3. Documentation
 
 ## Author
 Chaitanya Mittal, 2022
